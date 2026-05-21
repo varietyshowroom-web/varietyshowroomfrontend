@@ -38,88 +38,61 @@ export const Home = () => {
   return (
     <div className="min-h-screen bg-white-bg">
       {/* Hero Section */}
-      <section className="bg-dark-maroon text-white md:hidden relative py-10 pt-24">
-        
-        <div className="flex items-center px-6">
-          {/* Left Content */}
-          <div className="w-3/5">
-  <h1 className="font-serif text-2xl font-bold text-cream-beige">
-    Trending Fashion
-  </h1>
+      {/* ================= MOBILE HERO ================= */}
+<section className="bg-cream-beige md:hidden relative pt-20 pb-6">
+  <div className="px-4">
+    <div className="bg-cream-beige flex flex-col items-center">
 
-  <p className="mt-3 text-xs italic text-white/80">
-    Complete family fashion shop open 365 days.
-  </p>
+      {/* Full Banner */}
+      <Link to="/shop" className="w-full">
+        <img
+          src={banner}
+          alt="Variety Showroom"
+          className="w-full h-auto object-contain rounded-lg shadow-xl"
+        />
+      </Link>
 
-  <Link to="/shop">
-    <button className="mt-4 px-4 py-2 text-xs bg-cream-beige text-dark-maroon rounded-lg font-semibold">
-      Shop Now
-    </button>
-  </Link>
-</div>
+      {/* Button */}
+      <Link to="/shop">
+        <button className="mt-4 px-5 py-2 text-sm bg-dark-maroon text-white rounded-lg font-semibold">
+          Shop Now
+        </button>
+      </Link>
 
-          {/* Right Image */}
-          <div className="w-2/5 flex justify-center translate-x-4 translate-y-6">
-  <Link to="/shop">
-    <div className="w-[100px] h-[140px] overflow-hidden rounded shadow-xl">
+    </div>
+  </div>
+</section>
+
+{/* ================= DESKTOP HERO ================= */}
+<section className="bg-cream-beige py-20 hidden md:block">
+  <div className="container mx-auto px-4">
+
+    <div className="relative flex justify-center">
+
       <img
         src={banner}
         alt="Variety Showroom"
-        className="w-full h-full object-cover"
+        className="w-full max-w-5xl h-auto object-contain"
       />
+
+      <div className="absolute bottom-14 left-90 flex gap-4">
+        <Link to="/shop">
+          <button className="btn-primary">
+            Shop Now
+          </button>
+        </Link>
+
+        <Link to="/category/women">
+          <button className="btn-secondary">
+            Explore Collection
+          </button>
+        </Link>
+      </div>
+
     </div>
-  </Link>
-</div>
-        </div>
-      </section>
 
-      {/* ================= DESKTOP HERO ================= */}
-      <section className="bg-dark-maroon text-white py-20 hidden md:block">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          {/* Left Content */}
-          <div className="max-w-xl">
-            <span className="text-sm uppercase tracking-[0.3em] text-cream-beige">
-              {/* Welcome to Variety Showroom */}
-            </span>
-
-            <h1 className="font-serif text-6xl font-bold mt-4 leading-tight">
-              Trending Fashion
-              <br />
-              At Affordable Range
-            </h1>
-
-            <p className="italic mt-4 text-white/80">
-              Complete family fashion shop open 365 days.
-              Discover our latest collection of premium clothing.
-            </p>
-
-            <div className="mt-8 flex gap-4">
-              <Link to="/shop">
-                <button className="btn-primary">
-                  Shop Now
-                </button>
-              </Link>
-
-              <Link to="/category/women">
-                <button className="btn-secondary text-white border-white hover:text-dark-maroon">
-                  Explore Collection
-                </button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Image */}
-          <Link to="/shop">
-            <div className="w-40 h-60 overflow-hidden rounded shadow-xl">
-              <img
-                src={banner}
-                alt="Variety Showroom"
-                className="w-full h-full object-cover hover:scale-110 transition duration-500"
-              />
-            </div>
-          </Link>
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* Trending Categories */}
       <section className="py-24 bg-white-bg">
