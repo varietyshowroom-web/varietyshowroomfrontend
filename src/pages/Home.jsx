@@ -42,9 +42,9 @@ export const Home = () => {
         <div className="flex items-center px-6">
           {/* Left Content */}
           <div className="w-3/5">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-cream-beige">
+            {/* <span className="text-[10px] uppercase tracking-[0.2em] text-cream-beige">
               Welcome to Variety Showroom
-            </span>
+            </span> */}
 
             <h1 className="font-serif text-2xl font-bold mt-2 text-cream-beige">
               Trending Fashion
@@ -81,9 +81,9 @@ export const Home = () => {
         <div className="container mx-auto px-4 flex justify-between items-center">
           {/* Left Content */}
           <div className="max-w-xl">
-            <span className="text-sm uppercase tracking-[0.3em] text-cream-beige">
+            {/* <span className="text-sm uppercase tracking-[0.3em] text-cream-beige">
               Welcome to Variety Showroom
-            </span>
+            </span> */}
 
             <h1 className="font-serif text-6xl font-bold mt-4 leading-tight">
               Trending Fashion
