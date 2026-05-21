@@ -38,28 +38,25 @@ export const Home = () => {
   return (
     <div className="min-h-screen bg-white-bg">
       {/* Hero Section */}
-      <section className="bg-dark-maroon text-white md:hidden relative py-10">
+      <section className="bg-dark-maroon text-white md:hidden relative py-10 pt-24">
+        
         <div className="flex items-center px-6">
           {/* Left Content */}
           <div className="w-3/5">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-cream-beige">
-              {/* Welcome to Variety Showroom */}
-            </span>
+  <h1 className="font-serif text-2xl font-bold text-cream-beige">
+    Trending Fashion
+  </h1>
 
-            <h1 className="font-serif text-2xl font-bold mt-2 text-cream-beige">
-              Trending Fashion
-            </h1>
+  <p className="mt-3 text-xs italic text-white/80">
+    Complete family fashion shop open 365 days.
+  </p>
 
-            <p className="mt-3 text-xs italic text-white/80">
-              Complete family fashion shop open 365 days.
-            </p>
-
-            <Link to="/shop">
-              <button className="mt-4 px-4 py-2 text-xs bg-cream-beige text-dark-maroon rounded-lg font-semibold">
-                Shop Now
-              </button>
-            </Link>
-          </div>
+  <Link to="/shop">
+    <button className="mt-4 px-4 py-2 text-xs bg-cream-beige text-dark-maroon rounded-lg font-semibold">
+      Shop Now
+    </button>
+  </Link>
+</div>
 
           {/* Right Image */}
           <div className="w-2/5 flex justify-center translate-y-8">
