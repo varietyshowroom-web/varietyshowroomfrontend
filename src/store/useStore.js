@@ -6,6 +6,13 @@ export const useStore = create(
     (set) => ({
       cart: [],
       wishlist: [],
+      user: null,
+      token: null,
+      deliveryConfig: { charge_upto_two: 50, charge_more_than_two: 100 },
+
+      setDeliveryConfig: (config) => set({ deliveryConfig: config }),
+      setAuth: (user, token) => set({ user, token }),
+      logout: () => set({ user: null, token: null }),
       
       addToCart: (product, variant, quantity = 1) => set((state) => {
         const existingItemIndex = state.cart.findIndex(

@@ -6,6 +6,8 @@ import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetails } from './pages/ProductDetails';
 import { Cart } from './pages/Cart';
+import { Checkout } from './pages/Checkout';
+import { OrderConfirmation } from './pages/OrderConfirmation';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -17,8 +19,18 @@ const ScrollToTop = () => {
 
 import { Auth } from './pages/Auth';
 import { Profile, Wishlist } from './pages/Profile';
+import { useStore } from './store/useStore';
+import { orderService } from './services/orderService';
 
 function App() {
+  const setDeliveryConfig = useStore(state => state.setDeliveryConfig);
+
+  useEffect(() => {
+    orderService.getDeliveryConfig()
+      .then(config => setDeliveryConfig(config))
+      .catch(err => console.error("Could not load delivery config", err));
+  }, [setDeliveryConfig]);
+
   return (
     <Router>
       <ScrollToTop />
@@ -30,6 +42,8 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
             <Route path="/category/:slug" element={<Shop />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />

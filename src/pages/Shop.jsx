@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Filter, ChevronDown, X } from 'lucide-react';
 import { productService } from '../services/productService';
@@ -7,6 +7,10 @@ import { ProductCard } from '../components/ui/ProductCard';
 
 export const Shop = () => {
   const { slug } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get('search') || '';
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +23,7 @@ export const Shop = () => {
       setLoading(true);
       const [cats, prods] = await Promise.all([
         productService.getCategories(),
-        productService.getProducts()
+        productService.getProducts(searchQuery)
       ]);
       setCategories(cats);
       
@@ -42,7 +46,7 @@ export const Shop = () => {
       setLoading(false);
     };
     fetchData();
-  }, [slug, selectedSize]);
+  }, [slug, selectedSize, searchQuery]);
 
   const handleCategoryChange = (newSlug) => {
     setActiveCategory(newSlug);
@@ -58,7 +62,7 @@ export const Shop = () => {
       <div className="bg-dark-maroon/10 py-12 mb-12">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-serif text-dark-maroon mb-4">
-            {slug ? categories.find(c => c.slug === slug)?.name || 'Our Collection' : 'Our Collection'}
+            {searchQuery ? `Search Results for "${searchQuery}"` : slug ? categories.find(c => c.slug === slug)?.name || 'Our Collection' : 'Our Collection'}
           </h1>
           <div className="flex items-center justify-center space-x-2 text-sm text-muted-maroon">
             <Link to="/" className="hover:text-maroon-light transition-colors">Home</Link>

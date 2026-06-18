@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { productService } from '../../services/productService';
 import {
   ShoppingBag,
   Heart,
@@ -12,16 +14,30 @@ import {
 import { useStore } from '../../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const mockCategories = [
-  'Kurtis',
-  'Sarees',
-  'Frocks',
-  'Casual Wear',
-];
+
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    productService.getCategories().then(data => {
+      setCategories(data);
+    }).catch(err => console.error(err));
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   const cart = useStore((state) => state.cart);
 
@@ -88,15 +104,13 @@ export const Navbar = () => {
                   transition={{ duration: 0.2 }}
                   className="absolute top-10 left-0 w-64 bg-white rounded-2xl shadow-2xl border border-border-beige overflow-hidden"
                 >
-                  {mockCategories.map((category) => (
+                  {categories.map((category) => (
                     <Link
-                      key={category}
-                      to={`/category/${category
-                        .toLowerCase()
-                        .replace(/\s+/g, '-')}`}
+                      key={category.id || category.name}
+                      to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
                       className="block px-5 py-4 text-dark-maroon hover:bg-light-beige hover:text-maroon-light transition-all duration-200 border-b border-border-beige last:border-none"
                     >
-                      {category}
+                      {category.name}
                     </Link>
                   ))}
                 </motion.div>
@@ -108,9 +122,27 @@ export const Navbar = () => {
         {/* Icons */}
         <div className="flex items-center space-x-4 md:space-x-6">
 
-          <button className="text-dark-maroon hover:text-maroon-light transition-all duration-300">
-            <Search size={21} />
-          </button>
+          <div className="relative flex items-center">
+            {isSearchOpen ? (
+              <form onSubmit={handleSearch} className="absolute right-0 flex items-center bg-white border border-maroon-light rounded-full px-3 py-1 shadow-sm w-48 md:w-64">
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..." 
+                  className="w-full outline-none text-sm text-dark-maroon bg-transparent"
+                  autoFocus
+                />
+                <button type="button" onClick={() => setIsSearchOpen(false)} className="text-muted-maroon hover:text-dark-maroon ml-2">
+                  <X size={16} />
+                </button>
+              </form>
+            ) : (
+              <button onClick={() => setIsSearchOpen(true)} className="text-dark-maroon hover:text-maroon-light transition-all duration-300">
+                <Search size={21} />
+              </button>
+            )}
+          </div>
 
           <Link
             to="/profile"
@@ -197,16 +229,14 @@ export const Navbar = () => {
                   </h3>
 
                   <div className="flex flex-col space-y-3 pl-2">
-                    {mockCategories.map((category) => (
+                    {categories.map((category) => (
                       <Link
-                        key={category}
-                        to={`/category/${category
-                          .toLowerCase()
-                          .replace(/\s+/g, '-')}`}
+                        key={category.id || category.name}
+                        to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="text-dark-maroon hover:text-maroon-light transition-all duration-200"
                       >
-                        {category}
+                        {category.name}
                       </Link>
                     ))}
                   </div>
@@ -241,3 +271,270 @@ export const Navbar = () => {
     </header>
   );
 };
+// import React, { useState } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
+// import { useEffect } from 'react';
+// import { productService } from '../../services/productService';
+// import {
+//   ShoppingBag,
+//   Heart,
+//   Menu,
+//   X,
+//   Search,
+//   User,
+//   ChevronDown,
+// } from 'lucide-react';
+// import { useStore } from '../../store/useStore';
+// import { motion, AnimatePresence } from 'framer-motion';
+
+// export const Navbar = () => {
+//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+//   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [searchQuery, setSearchQuery] = useState('');
+//   const [isSearchOpen, setIsSearchOpen] = useState(false);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     productService.getCategories().then(data => {
+//       setCategories(data);
+//     }).catch(err => console.error(err));
+//   }, []);
+
+//   const handleSearch = (e) => {
+//     e.preventDefault();
+//     if (searchQuery.trim()) {
+//       navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
+//       setIsSearchOpen(false);
+//       setSearchQuery('');
+//     }
+//   };
+
+//   const cart = useStore((state) => state.cart);
+
+//   const cartCount = cart.reduce(
+//     (total, item) => total + item.quantity,
+//     0
+//   );
+
+//   const navLinks = [
+//     { name: 'Home', path: '/' },
+//     { name: 'Shop', path: '/shop' },
+//   ];
+
+//   return (
+//     <header className="fixed top-0 w-full z-50 bg-dark-maroon shadow-md py-4">
+//       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+
+//         {/* Mobile Menu Button */}
+//         <button
+//           className="md:hidden text-white"
+//           onClick={() => setIsMobileMenuOpen(true)}
+//         >
+//           <Menu size={26} />
+//         </button>
+
+//         {/* Logo */}
+//         <Link
+//           to="/"
+//           className="text-2xl md:text-3xl font-bold text-white tracking-tight"
+//         >
+//           Variety Showroom
+//         </Link>
+
+//         {/* Desktop Navigation */}
+//         <nav className="hidden md:flex items-center space-x-8">
+//           {navLinks.map((link) => (
+//             <Link
+//               key={link.name}
+//               to={link.path}
+//               className="text-white hover:text-light-beige font-medium transition-all duration-300"
+//             >
+//               {link.name}
+//             </Link>
+//           ))}
+
+//           {/* Category Dropdown */}
+//           <div
+//             className="relative"
+//             onMouseEnter={() => setIsCategoryOpen(true)}
+//             onMouseLeave={() => setIsCategoryOpen(false)}
+//           >
+//             <button className="flex items-center gap-1 text-white hover:text-light-beige font-medium transition-all duration-300">
+//               Categories
+//               <ChevronDown size={18} />
+//             </button>
+
+//             <AnimatePresence>
+//               {isCategoryOpen && (
+//                 <motion.div
+//                   initial={{ opacity: 0, y: 15 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   exit={{ opacity: 0, y: 15 }}
+//                   transition={{ duration: 0.2 }}
+//                   className="absolute top-10 left-0 w-64 bg-dark-maroon rounded-2xl shadow-2xl border border-maroon-light overflow-hidden"
+//                 >
+//                   {categories.map((category) => (
+//                     <Link
+//                       key={category.id || category.name}
+//                       to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
+//                       className="block px-5 py-4 text-white hover:bg-maroon-light hover:text-white transition-all duration-200 border-b border-maroon-light last:border-none"
+//                     >
+//                       {category.name}
+//                     </Link>
+//                   ))}
+//                 </motion.div>
+//               )}
+//             </AnimatePresence>
+//           </div>
+//         </nav>
+
+//         {/* Icons */}
+//         <div className="flex items-center space-x-4 md:space-x-6">
+//           <div className="relative flex items-center">
+//             {isSearchOpen ? (
+//               <form onSubmit={handleSearch} className="absolute right-0 flex items-center bg-dark-maroon border border-light-beige rounded-full px-3 py-1 shadow-sm w-48 md:w-64">
+//                 <input 
+//                   type="text" 
+//                   value={searchQuery}
+//                   onChange={(e) => setSearchQuery(e.target.value)}
+//                   placeholder="Search products..." 
+//                   className="w-full outline-none text-sm text-white placeholder-white/60 bg-transparent"
+//                   autoFocus
+//                 />
+//                 <button type="button" onClick={() => setIsSearchOpen(false)} className="text-light-beige/80 hover:text-white ml-2">
+//                   <X size={16} />
+//                 </button>
+//               </form>
+//             ) : (
+//               <button onClick={() => setIsSearchOpen(true)} className="text-white hover:text-light-beige transition-all duration-300">
+//                 <Search size={21} />
+//               </button>
+//             )}
+//           </div>
+
+//           <Link
+//             to="/profile"
+//             className="hidden md:block text-white hover:text-light-beige transition-all duration-300"
+//           >
+//             <User size={21} />
+//           </Link>
+
+//           <Link
+//             to="/wishlist"
+//             className="hidden md:block text-white hover:text-light-beige transition-all duration-300"
+//           >
+//             <Heart size={21} />
+//           </Link>
+
+//           <Link
+//             to="/cart"
+//             className="relative text-white hover:text-light-beige transition-all duration-300"
+//           >
+//             <ShoppingBag size={21} />
+
+//             {cartCount > 0 && (
+//               <span className="absolute -top-2 -right-2 bg-white text-dark-maroon text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
+//                 {cartCount}
+//               </span>
+//             )}
+//           </Link>
+//         </div>
+//       </div>
+
+//       {/* Mobile Menu */}
+//       <AnimatePresence>
+//         {isMobileMenuOpen && (
+//           <>
+//             {/* Overlay */}
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 1 }}
+//               exit={{ opacity: 0 }}
+//               onClick={() => setIsMobileMenuOpen(false)}
+//               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+//             />
+
+//             {/* Sidebar */}
+//             <motion.div
+//               initial={{ x: '-100%' }}
+//               animate={{ x: 0 }}
+//               exit={{ x: '-100%' }}
+//               transition={{ duration: 0.3 }}
+//               className="fixed top-0 left-0 h-full w-[80%] max-w-sm bg-dark-maroon z-50 p-6 shadow-2xl flex flex-col"
+//             >
+//               {/* Header */}
+//               <div className="flex justify-between items-center mb-10">
+//                 <h2 className="text-2xl font-bold text-white">
+//                   Menu
+//                 </h2>
+
+//                 <button
+//                   onClick={() => setIsMobileMenuOpen(false)}
+//                   className="text-white"
+//                 >
+//                   <X size={26} />
+//                 </button>
+//               </div>
+
+//               {/* Links */}
+//               <nav className="flex flex-col space-y-5">
+//                 {navLinks.map((link) => (
+//                   <Link
+//                     key={link.name}
+//                     to={link.path}
+//                     onClick={() => setIsMobileMenuOpen(false)}
+//                     className="text-lg font-medium text-white border-b border-maroon-light pb-3"
+//                   >
+//                     {link.name}
+//                   </Link>
+//                 ))}
+
+//                 {/* Categories */}
+//                 <div>
+//                   <h3 className="text-lg font-semibold text-light-beige mb-3">
+//                     Categories
+//                   </h3>
+
+//                   <div className="flex flex-col space-y-3 pl-2">
+//                     {categories.map((category) => (
+//                       <Link
+//                         key={category.id || category.name}
+//                         to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
+//                         onClick={() => setIsMobileMenuOpen(false)}
+//                         className="text-white hover:text-light-beige transition-all duration-200"
+//                       >
+//                         {category.name}
+//                       </Link>
+//                     ))}
+//                   </div>
+//                 </div>
+//               </nav>
+
+//               {/* Bottom Links */}
+//               <div className="mt-auto flex flex-col space-y-4 pt-8 border-t border-maroon-light">
+//                 <Link
+//                   to="/profile"
+//                   onClick={() => setIsMobileMenuOpen(false)}
+//                   className="flex items-center text-white hover:text-light-beige"
+//                 >
+//                   <User size={20} className="mr-3" />
+//                   Profile
+//                 </Link>
+
+//                 <Link
+//                   to="/wishlist"
+//                   onClick={() => setIsMobileMenuOpen(false)}
+//                   className="flex items-center text-white hover:text-light-beige"
+//                 >
+//                   <Heart size={20} className="mr-3" />
+//                   Wishlist
+//                 </Link>
+//               </div>
+//             </motion.div>
+//           </>
+//         )}
+//       </AnimatePresence>
+//     </header>
+//   );
+// };

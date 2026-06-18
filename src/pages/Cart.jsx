@@ -6,10 +6,12 @@ import { useStore } from '../store/useStore';
 import { Button } from '../components/ui/Button';
 
 export const Cart = () => {
-  const { cart, removeFromCart, updateQuantity } = useStore();
+  const { cart, removeFromCart, updateQuantity, deliveryConfig } = useStore();
 
   const subtotal = cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
-  const shipping = subtotal > 0 ? 50 : 0; // Flat shipping for now
+  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+  
+  const shipping = subtotal > 0 ? (totalQuantity <= 2 ? Number(deliveryConfig.charge_upto_two) : Number(deliveryConfig.charge_more_than_two)) : 0;
   const total = subtotal + shipping;
 
   if (cart.length === 0) {
@@ -56,7 +58,7 @@ export const Cart = () => {
                     <div className="col-span-3 flex w-full gap-4">
                       <Link to={`/product/${item.product.id}`} className="w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                         <img 
-                          src={item.product.images?.[0]?.image || 'https://via.placeholder.com/100x133'} 
+                          src={item.variant?.image || item.product.images?.[0]?.image || 'https://via.placeholder.com/100x133'} 
                           alt={item.product.name}
                           className="w-full h-full object-cover"
                         />
@@ -138,9 +140,11 @@ export const Cart = () => {
                 </div>
               </div>
 
-              <Button variant="accent" className="w-full h-14 text-lg">
-                Proceed to Checkout <ArrowRight size={20} className="ml-2" />
-              </Button>
+              <Link to="/checkout" className="w-full">
+                <Button variant="accent" className="w-full h-14 text-lg">
+                  Proceed to Checkout <ArrowRight size={20} className="ml-2" />
+                </Button>
+              </Link>
 
               <div className="mt-6 flex items-center justify-center space-x-4 opacity-50">
                 <div className="h-8 w-12 bg-gray-200 rounded"></div>

@@ -60,7 +60,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Phone size={20} className="text-maroon-light mr-3 shrink-0" />
-                <a href="tel:7893482089" className="text-white-bg/80 hover:text-maroon-light transition-colors">7893482089</a>
+                <a href="tel:9182823269" className="text-white-bg/80 hover:text-maroon-light transition-colors">9182823269</a>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="text-maroon-light mr-3 shrink-0" />

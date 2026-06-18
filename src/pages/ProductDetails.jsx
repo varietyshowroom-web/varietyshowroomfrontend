@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ShoppingBag, ChevronRight, Share2, Ruler } from 'lucide-react';
 import { productService } from '../services/productService';
@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button';
 
 export const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
@@ -23,9 +24,11 @@ export const ProductDetails = () => {
       const data = await productService.getProductById(id);
       setProduct(data);
       if (data && data.available_colors?.length > 0) {
-        setSelectedColor(data.available_colors[0]);
-        const imgIndex = data.images?.findIndex(img => img.image === data.available_colors[0].image);
+        const firstColor = data.available_colors[0];
+        setSelectedColor(firstColor);
+        const imgIndex = data.images?.findIndex(img => img.color === firstColor.id);
         if(imgIndex >= 0) setActiveImage(imgIndex);
+        else setActiveImage(0);
       }
       setLoading(false);
     };
@@ -41,14 +44,36 @@ export const ProductDetails = () => {
   const availableVariants = product.variants.filter(v => v.color?.id === selectedColor?.id);
   const selectedVariant = availableVariants.find(v => v.size === selectedSize);
 
+  const colorImages = product.images?.filter(img => img.color === selectedColor?.id) || [];
+  const displayImages = colorImages.length > 0 ? colorImages : (product.images || []);
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    setSelectedSize(null);
+    setActiveImage(0); // Reset to first image of the new color set
+  };
+
+  const getVariantToAdd = () => {
+    const variantImage = displayImages.length > 0 ? displayImages[0].image : null;
+    const baseVariant = selectedVariant || product.variants[0] || { id: 'default', color: selectedColor, size: selectedSize };
+    return { ...baseVariant, image: variantImage };
+  };
+
   const handleAddToCart = () => {
     if (product.has_sizes && !selectedSize) {
       alert("Please select a size");
       return;
     }
-    // If no variants exist, pass a dummy variant, or the first one
-    const variantToAdd = selectedVariant || product.variants[0] || { id: 'default', color: selectedColor, size: selectedSize };
-    addToCart(product, variantToAdd, quantity);
+    addToCart(product, getVariantToAdd(), quantity);
+  };
+
+  const handleBuyNow = () => {
+    if (product.has_sizes && !selectedSize) {
+      alert("Please select a size");
+      return;
+    }
+    addToCart(product, getVariantToAdd(), quantity);
+    navigate('/cart');
   };
 
   return (
@@ -72,7 +97,7 @@ export const ProductDetails = () => {
           <div className="flex flex-col-reverse md:flex-row gap-4">
             {/* Thumbnails */}
             <div className="flex md:flex-col gap-4 overflow-x-auto md:w-24 flex-shrink-0">
-              {product.images?.map((img, idx) => (
+              {displayImages.map((img, idx) => (
                 <button 
                   key={idx}
                   onClick={() => setActiveImage(idx)}
@@ -92,7 +117,7 @@ export const ProductDetails = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  src={product.images?.[activeImage]?.image || 'https://via.placeholder.com/600x800'} 
+                  src={displayImages[activeImage]?.image || 'https://via.placeholder.com/600x800'} 
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
@@ -136,12 +161,7 @@ export const ProductDetails = () => {
                   {product.available_colors.map(color => (
                     <button
                       key={color.id}
-                      onClick={() => {
-                        setSelectedColor(color);
-                        setSelectedSize(null); // Reset size when color changes
-                        const imgIndex = product.images?.findIndex(img => img.image === color.image);
-                        if(imgIndex >= 0) setActiveImage(imgIndex);
-                      }}
+                      onClick={() => handleColorSelect(color)}
                       className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${selectedColor?.id === color.id ? 'border-maroon-light scale-110' : 'border-transparent hover:scale-110'}`}
                     >
                       <span 
@@ -159,9 +179,9 @@ export const ProductDetails = () => {
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-3">
                   <span className="font-medium text-dark-maroon">Size</span>
-                  <button className="text-sm text-maroon-light hover:underline flex items-center">
+                  {/* <button className="text-sm text-maroon-light hover:underline flex items-center">
                     <Ruler size={14} className="mr-1"/> Size Guide
-                  </button>
+                  </button> */}
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {availableVariants.map(variant => {
@@ -211,6 +231,15 @@ export const ProductDetails = () => {
               >
                 <ShoppingBag size={20} className="mr-2" />
                 {product.is_sold_out ? 'Out of Stock' : 'Add to Cart'}
+              </Button>
+              <Button 
+                variant="primary" 
+                size="lg" 
+                className="flex-grow bg-dark-maroon text-white hover:bg-maroon-light transition-colors"
+                onClick={handleBuyNow}
+                disabled={product.is_sold_out || (product.has_sizes && !selectedSize)}
+              >
+                Buy Now
               </Button>
               <Button variant="secondary" className="px-4">
                 <Share2 size={20} />
