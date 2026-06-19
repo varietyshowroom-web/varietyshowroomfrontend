@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ShoppingBag, ChevronRight, Share2, Ruler } from 'lucide-react';
+import { Heart, ShoppingBag, ChevronRight, Share2 } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useStore } from '../store/useStore';
 import { Button } from '../components/ui/Button';
@@ -40,7 +40,6 @@ export const ProductDetails = () => {
 
   const isWishlisted = wishlist.some(item => item.id === product.id);
 
-  // Filter variants by selected color to get available sizes
   const availableVariants = product.variants.filter(v => v.color?.id === selectedColor?.id);
   const selectedVariant = availableVariants.find(v => v.size === selectedSize);
 
@@ -50,7 +49,7 @@ export const ProductDetails = () => {
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     setSelectedSize(null);
-    setActiveImage(0); // Reset to first image of the new color set
+    setActiveImage(0);
   };
 
   const getVariantToAdd = () => {
@@ -81,34 +80,20 @@ export const ProductDetails = () => {
       <div className="container mx-auto px-4">
         
         {/* Breadcrumb */}
-        <div className="flex items-center space-x-2 text-sm text-muted-maroon mb-8">
-          <Link to="/" className="hover:text-maroon-light">Home</Link>
-          <ChevronRight size={14} />
-          <Link to="/shop" className="hover:text-maroon-light">Shop</Link>
-          <ChevronRight size={14} />
-          <Link to={`/category/${product.category_name?.toLowerCase()}`} className="hover:text-maroon-light">{product.category_name}</Link>
-          <ChevronRight size={14} />
-          <span className="text-dark-maroon truncate max-w-[200px]">{product.name}</span>
+        <div className="flex items-center space-x-2 text-sm text-muted-maroon mb-8 overflow-x-auto whitespace-nowrap md:overflow-visible pr-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <Link to="/" className="hover:text-maroon-light flex-shrink-0">Home</Link>
+          <ChevronRight size={14} className="flex-shrink-0" />
+          <Link to="/shop" className="hover:text-maroon-light flex-shrink-0">Shop</Link>
+          <ChevronRight size={14} className="flex-shrink-0" />
+          <Link to={`/category/${product.category_name?.toLowerCase()}`} className="hover:text-maroon-light flex-shrink-0">{product.category_name}</Link>
+          <ChevronRight size={14} className="flex-shrink-0" />
+          <span className="text-dark-maroon truncate max-w-[180px] md:max-w-[200px] flex-shrink-0">{product.name}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           
           {/* Image Gallery */}
-          <div className="flex flex-col-reverse md:flex-row gap-4">
-            {/* Thumbnails */}
-            <div className="flex md:flex-col gap-4 overflow-x-auto md:w-24 flex-shrink-0">
-              {displayImages.map((img, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setActiveImage(idx)}
-                  className={`relative aspect-[3/4] rounded-lg overflow-hidden border-2 transition-colors ${activeImage === idx ? 'border-maroon-light' : 'border-transparent hover:border-cream-beige'}`}
-                >
-                  <img src={img.image} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-            
-            {/* Main Image */}
+          <div className="flex flex-col md:flex-col-reverse lg:flex-row-reverse xl:flex-row-reverse gap-4">
             <div className="relative flex-grow aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.img 
@@ -125,19 +110,38 @@ export const ProductDetails = () => {
               
               <button 
                 onClick={() => toggleWishlist(product)}
-                className={`absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center bg-white shadow-lg transition-colors z-10 ${
-                  isWishlisted ? 'text-maroon-light' : 'text-dark-maroon hover:text-maroon-light'
-                }`}
+                className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center bg-white shadow-lg transition-colors z-10 text-dark-maroon hover:text-maroon-light"
               >
-                <Heart size={24} fill={isWishlisted ? "currentColor" : "none"} />
+                <Heart size={24} fill={isWishlisted ? "currentColor" : "none"} className={isWishlisted ? 'text-maroon-light' : ''} />
               </button>
+
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/15 backdrop-blur-sm md:hidden z-10">
+                {displayImages.map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex md:flex-row lg:flex-col xl:flex-col gap-4 overflow-x-auto md:overflow-x-auto lg:overflow-x-visible lg:w-24 flex-shrink-0 pb-2 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {displayImages.map((img, idx) => (
+                <button 
+                  key={idx}
+                  onClick={() => setActiveImage(idx)}
+                  className={`relative aspect-[3/4] w-16 md:w-20 lg:w-full rounded-lg overflow-hidden border-2 transition-colors flex-shrink-0 ${activeImage === idx ? 'border-maroon-light' : 'border-transparent hover:border-cream-beige'}`}
+                >
+                  <img src={img.image} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Product Details */}
+          {/* Product Details Section */}
           <div className="flex flex-col pt-4">
-            <h1 className="text-3xl md:text-4xl font-serif text-dark-maroon mb-2">{product.name}</h1>
-            <p className="text-muted-maroon mb-6">Product Code: {product.code}</p>
+            <h1 className="text-3xl md:text-4xl font-serif text-dark-maroon mb-2 leading-tight">{product.name}</h1>
+            <p className="text-muted-maroon mb-6 text-sm md:text-base">Product Code: {product.code}</p>
             
             <div className="flex items-end gap-4 mb-8 pb-8 border-b border-cream-beige/50">
               <span className="text-3xl font-bold text-dark-maroon">₹{product.price}</span>
@@ -155,17 +159,17 @@ export const ProductDetails = () => {
             {product.available_colors && product.available_colors.length > 0 && (
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="font-medium text-dark-maroon">Color: {selectedColor?.name}</span>
+                  <span className="font-medium text-dark-maroon text-base md:text-lg">Color: {selectedColor?.name}</span>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {product.available_colors.map(color => (
                     <button
                       key={color.id}
                       onClick={() => handleColorSelect(color)}
-                      className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${selectedColor?.id === color.id ? 'border-maroon-light scale-110' : 'border-transparent hover:scale-110'}`}
+                      className={`w-11 h-11 md:w-10 md:h-10 rounded-full border-2 transition-all flex items-center justify-center ${selectedColor?.id === color.id ? 'border-maroon-light scale-110' : 'border-transparent hover:scale-110 active:scale-95'}`}
                     >
                       <span 
-                        className="w-8 h-8 rounded-full shadow-sm border border-black/10" 
+                        className="w-9 h-9 md:w-8 md:h-8 rounded-full shadow-sm border border-black/10" 
                         style={{ backgroundColor: color.color }}
                       />
                     </button>
@@ -178,10 +182,7 @@ export const ProductDetails = () => {
             {product.has_sizes && (
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="font-medium text-dark-maroon">Size</span>
-                  {/* <button className="text-sm text-maroon-light hover:underline flex items-center">
-                    <Ruler size={14} className="mr-1"/> Size Guide
-                  </button> */}
+                  <span className="font-medium text-dark-maroon text-base md:text-lg">Size</span>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {availableVariants.map(variant => {
@@ -191,12 +192,12 @@ export const ProductDetails = () => {
                         key={variant.id}
                         disabled={!isAvailable}
                         onClick={() => setSelectedSize(variant.size)}
-                        className={`min-w-[3rem] h-12 px-4 rounded-lg border flex items-center justify-center font-medium transition-colors ${
+                        className={`min-w-[3.5rem] md:min-w-[3rem] h-12 px-4 rounded-lg border flex items-center justify-center font-medium transition-all ${
                           !isAvailable 
                             ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed line-through' 
                             : selectedSize === variant.size 
-                              ? 'bg-dark-maroon text-white border-dark-maroon' 
-                              : 'bg-white text-dark-maroon border-cream-beige hover:border-maroon-light'
+                              ? 'bg-dark-maroon text-white border-dark-maroon shadow-sm' 
+                              : 'bg-white text-dark-maroon border-cream-beige hover:border-maroon-light active:border-maroon-light'
                         }`}
                       >
                         {variant.size}
@@ -205,51 +206,53 @@ export const ProductDetails = () => {
                   })}
                 </div>
                 {selectedVariant && selectedVariant.stock <= 5 && selectedVariant.stock > 0 && (
-                  <p className="text-maroon-light text-sm mt-2">Only {selectedVariant.stock} left in stock!</p>
+                  <p className="text-maroon-light text-sm mt-2 font-medium">Only {selectedVariant.stock} left in stock!</p>
                 )}
               </div>
             )}
 
-            {/* Quantity */}
+            {/* Quantity Controls */}
             <div className="mb-8 flex items-center gap-4">
-              <span className="font-medium text-dark-maroon">Quantity</span>
-              <div className="flex items-center border border-cream-beige rounded-full">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-dark-maroon hover:text-maroon-light">-</button>
-                <span className="w-10 text-center font-medium">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center text-dark-maroon hover:text-maroon-light">+</button>
+              <span className="font-medium text-dark-maroon text-base md:text-lg">Quantity</span>
+              <div className="flex items-center border border-cream-beige rounded-full bg-white shadow-sm">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-11 h-11 md:w-10 md:h-10 flex items-center justify-center text-dark-maroon font-semibold hover:text-maroon-light active:bg-gray-50 rounded-l-full select-none">-</button>
+                <span className="w-10 text-center font-medium text-base select-none">{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)} className="w-11 h-11 md:w-10 md:h-10 flex items-center justify-center text-dark-maroon font-semibold hover:text-maroon-light active:bg-gray-50 rounded-r-full select-none">+</button>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-4 mb-10">
+            {/* Action Buttons Container - Placed cleanly inline under quantity layout for both screen configurations */}
+            <div className="flex gap-3 md:gap-4 mb-10 w-full">
               <Button 
                 variant="accent" 
                 size="lg" 
-                className="flex-grow"
+                className="flex-grow h-12 text-sm md:text-base px-2"
                 onClick={handleAddToCart}
                 disabled={product.is_sold_out || (product.has_sizes && !selectedSize)}
               >
-                <ShoppingBag size={20} className="mr-2" />
-                {product.is_sold_out ? 'Out of Stock' : 'Add to Cart'}
+                <ShoppingBag size={20} className="mr-2 flex-shrink-0" />
+                <span className="truncate">{product.is_sold_out ? 'Out of Stock' : 'Add to Cart'}</span>
               </Button>
+              
               <Button 
                 variant="primary" 
                 size="lg" 
-                className="flex-grow bg-dark-maroon text-white hover:bg-maroon-light transition-colors"
+                className="flex-grow h-12 bg-dark-maroon text-white hover:bg-maroon-light transition-colors text-sm md:text-base px-2"
                 onClick={handleBuyNow}
                 disabled={product.is_sold_out || (product.has_sizes && !selectedSize)}
               >
                 Buy Now
               </Button>
-              <Button variant="secondary" className="px-4">
+              
+              {/* <Button variant="secondary" className="px-4 h-12 border border-cream-beige active:bg-gray-50 flex-shrink-0 rounded-lg">
                 <Share2 size={20} />
-              </Button>
+              </Button> */}
             </div>
 
-            {/* Description */}
+            {/* Description Details */}
             <div className="border-t border-cream-beige/50 pt-8">
               <h3 className="text-lg font-serif font-bold text-dark-maroon mb-4">Product Details</h3>
-              <div className="text-muted-maroon leading-relaxed space-y-4">
+              <div className="text-muted-maroon leading-relaxed space-y-4 text-sm md:text-base">
                 <p>{product.description}</p>
               </div>
             </div>
