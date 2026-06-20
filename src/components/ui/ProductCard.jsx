@@ -67,14 +67,14 @@ export const ProductCard = ({ product }) => {
         <div className={`absolute bottom-4 left-0 right-0 flex justify-center gap-3 transition-all duration-300 ${
           isHovered ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
         }`}>
-          <button 
+          {/* <button 
             onClick={handleWishlist}
             className={`w-10 h-10 rounded-full flex items-center justify-center bg-white shadow-lg transition-colors ${
               isWishlisted ? 'text-maroon-light' : 'text-dark-maroon hover:text-maroon-light'
             }`}
           >
             <Heart size={20} fill={isWishlisted ? "currentColor" : "none"} />
-          </button>
+          </button> */}
           
           <button 
             onClick={handleQuickAdd}
