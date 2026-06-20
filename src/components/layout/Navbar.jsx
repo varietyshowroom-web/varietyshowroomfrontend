@@ -151,12 +151,12 @@ export const Navbar = () => {
             <User size={21} />
           </Link>
 
-          <Link
+          {/* <Link
             to="/wishlist"
             className="hidden md:block text-dark-maroon hover:text-maroon-light transition-all duration-300"
           >
             <Heart size={21} />
-          </Link>
+          </Link> */}
 
           <Link
             to="/cart"
@@ -255,7 +255,7 @@ export const Navbar = () => {
                   Profile
                 </Link>
 
-                <Link
+                {/* <Link
                   to="/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center text-dark-maroon"
@@ -263,7 +263,7 @@ export const Navbar = () => {
                   <Heart size={20} className="mr-3" />
                   Wishlist
                 </Link>
-              </div>
+              </div> */}
             </motion.div>
           </>
         )}
