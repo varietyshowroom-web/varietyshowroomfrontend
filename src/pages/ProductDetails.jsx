@@ -108,12 +108,12 @@ export const ProductDetails = () => {
                 />
               </AnimatePresence>
               
-              <button 
+              {/* <button 
                 onClick={() => toggleWishlist(product)}
                 className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center bg-white shadow-lg transition-colors z-10 text-dark-maroon hover:text-maroon-light"
               >
                 <Heart size={24} fill={isWishlisted ? "currentColor" : "none"} className={isWishlisted ? 'text-maroon-light' : ''} />
-              </button>
+              </button> */}
 
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/15 backdrop-blur-sm md:hidden z-10">
                 {displayImages.map((_, idx) => (
