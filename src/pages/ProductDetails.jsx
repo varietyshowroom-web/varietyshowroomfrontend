@@ -498,38 +498,41 @@ export const ProductDetails = () => {
             </div>
 
             {/* Action Buttons Container */}
-            <div className="flex flex-col gap-3 w-full mb-10">
-              <Button 
-                variant="accent" 
-                size="lg" 
-                className={`w-full h-12 text-sm md:text-base px-2 border flex items-center justify-center transition-all ${
-                  isSizeRequiredButMissing 
-                    ? 'bg-[#f4f4f4] text-[#939393] border-gray-200 shadow-none cursor-default' 
-                    : 'bg-cream-beige text-dark-maroon border-cream-beige hover:bg-cream-beige/80'
-                }`}
-                onClick={handleAddToCart}
-                disabled={product.is_sold_out || isSizeRequiredButMissing}
-              >
-                {!isSizeRequiredButMissing && <ShoppingBag size={20} className="mr-2 flex-shrink-0" />}
-                <span className="font-semibold tracking-wide">
-                  {product.is_sold_out ? 'Out of Stock' : isSizeRequiredButMissing ? 'Select Size' : 'Add to Cart'}
-                </span>
-              </Button>
-              
-              <Button 
-                variant="primary" 
-                size="lg" 
-                className={`w-full h-12 text-sm md:text-base px-2 transition-colors flex items-center justify-center font-semibold tracking-wide ${
-                  isSizeRequiredButMissing 
-                    ? 'bg-[#f4f4f4] text-[#939393] border border-gray-200 cursor-default pointer-events-none' 
-                    : 'bg-dark-maroon text-white hover:bg-maroon-light'
-                }`}
-                onClick={handleBuyNow}
-                disabled={product.is_sold_out || isSizeRequiredButMissing}
-              >
-                {isSizeRequiredButMissing ? 'Select Size' : 'Buy Now'}
-              </Button>
-            </div>
+            <div className="flex gap-3 md:gap-4 mb-10 w-full">
+  <Button 
+    variant="accent" 
+    size="lg" 
+    className={`flex-grow h-12 text-sm md:text-base px-2 border flex items-center justify-center transition-all ${
+      isSizeRequiredButMissing 
+        ? 'bg-[#f4f4f4] text-[#939393] border-gray-200 shadow-none cursor-default' 
+        : 'bg-cream-beige text-dark-maroon border-cream-beige hover:bg-cream-beige/80'
+    }`}
+    onClick={handleAddToCart}
+    disabled={product.is_sold_out || isSizeRequiredButMissing}
+  >
+    {/* Only show the icon if size is selected */}
+    {!isSizeRequiredButMissing && <ShoppingBag size={20} className="mr-2 flex-shrink-0" />}
+    <span className="truncate">
+      {product.is_sold_out ? 'Out of Stock' : isSizeRequiredButMissing ? 'Select Size' : 'Add to Cart'}
+    </span>
+  </Button>
+  
+  <Button 
+    variant="primary" 
+    size="lg" 
+    className={`flex-grow h-12 text-sm md:text-base px-2 transition-colors flex items-center justify-center font-semibold ${
+      isSizeRequiredButMissing 
+        ? 'bg-[#f4f4f4] text-[#939393] border border-gray-200 cursor-default pointer-events-none' 
+        : 'bg-dark-maroon text-white hover:bg-maroon-light'
+    }`}
+    onClick={handleBuyNow}
+    disabled={product.is_sold_out || isSizeRequiredButMissing}
+  >
+    <span className="truncate">
+      {isSizeRequiredButMissing ? 'Select Size' : 'Buy Now'}
+    </span>
+  </Button>
+</div>
 
             {/* Description Details */}
             <div className="border-t border-cream-beige/50 pt-8">
