@@ -499,39 +499,45 @@ export const ProductDetails = () => {
 
             {/* Action Buttons Container */}
             <div className="flex gap-3 md:gap-4 mb-10 w-full">
-  <Button 
-    variant="accent" 
-    size="lg" 
-    className={`flex-grow h-12 text-sm md:text-base px-2 border flex items-center justify-center transition-all ${
-      isSizeRequiredButMissing 
-        ? 'bg-[#f4f4f4] text-[#939393] border-gray-200 shadow-none cursor-default' 
-        : '' // Falls back to your original 'accent' class styles when active
-    }`}
-    onClick={handleAddToCart}
-    disabled={product.is_sold_out || isSizeRequiredButMissing}
-  >
-    {/* Only show the shopping bag icon if a size is selected */}
-    {!isSizeRequiredButMissing && <ShoppingBag size={20} className="mr-2 flex-shrink-0" />}
-    <span className="truncate">
-      {product.is_sold_out ? 'Out of Stock' : isSizeRequiredButMissing ? 'Select Size' : 'Add to Cart'}
-    </span>
-  </Button>
-  
-  <Button 
-    variant="primary" 
-    size="lg" 
-    className={`flex-grow h-12 text-sm md:text-base px-2 transition-colors flex items-center justify-center ${
-      isSizeRequiredButMissing 
-        ? 'bg-[#f4f4f4] text-[#939393] border border-gray-200 shadow-none cursor-default' 
-        : 'bg-dark-maroon text-white hover:bg-maroon-light' // Original colors when active
-    }`}
-    onClick={handleBuyNow}
-    disabled={product.is_sold_out || isSizeRequiredButMissing}
-  >
-    <span className="truncate">
-      {isSizeRequiredButMissing ? 'Select Size' : 'Buy Now'}
-    </span>
-  </Button>
+  {isSizeRequiredButMissing ? (
+    <>
+      {/* Fake "Add to Cart" Placeholder */}
+      <div className="flex-grow h-12 text-sm md:text-base px-2 rounded-xl bg-[#f4f4f4] text-[#939393] border border-gray-200/60 flex items-center justify-center font-medium select-none cursor-not-allowed">
+        <span className="truncate">Select Size</span>
+      </div>
+
+      {/* Fake "Buy Now" Placeholder */}
+      <div className="flex-grow h-12 text-sm md:text-base px-2 rounded-xl bg-[#ececec] text-[#939393] flex items-center justify-center font-medium select-none cursor-not-allowed">
+        <span className="truncate">Select Size</span>
+      </div>
+    </>
+  ) : (
+    <>
+      {/* Active Actual Buttons */}
+      <Button 
+        variant="accent" 
+        size="lg" 
+        className="flex-grow h-12 text-sm md:text-base px-2 flex items-center justify-center"
+        onClick={handleAddToCart}
+        disabled={product.is_sold_out}
+      >
+        <ShoppingBag size={20} className="mr-2 flex-shrink-0" />
+        <span className="truncate">
+          {product.is_sold_out ? 'Out of Stock' : 'Add to Cart'}
+        </span>
+      </Button>
+      
+      <Button 
+        variant="primary" 
+        size="lg" 
+        className="flex-grow h-12 bg-dark-maroon text-white hover:bg-maroon-light text-sm md:text-base px-2 flex items-center justify-center font-semibold"
+        onClick={handleBuyNow}
+        disabled={product.is_sold_out}
+      >
+        <span className="truncate">Buy Now</span>
+      </Button>
+    </>
+  )}
 </div>
 
             {/* Description Details */}
