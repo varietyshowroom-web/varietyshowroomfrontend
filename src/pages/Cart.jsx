@@ -142,7 +142,7 @@ export const Cart = () => {
 
               <Link to="/checkout" className="w-full">
                 <Button variant="accent" className="w-full h-14 text-lg">
-                  Proceed to Checkout <ArrowRight size={20} className="ml-2" />
+                  Buy Now <ArrowRight size={20} className="ml-2" />
                 </Button>
               </Link>
 
