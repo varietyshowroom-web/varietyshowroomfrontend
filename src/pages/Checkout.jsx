@@ -50,6 +50,7 @@ export const Checkout = () => {
         .catch(err => console.error(err));
     }
   }, [token, cart.length, navigate, paymentComplete]);
+
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -71,7 +72,6 @@ export const Checkout = () => {
       if (selectedAddressId && selectedAddressId !== 'new') {
         finalAddress = addresses.find(a => a.id === selectedAddressId);
       } else {
-        // Validation for new address
         if (!addressForm.name || !addressForm.phone || !addressForm.street || !addressForm.city || !addressForm.state || !addressForm.pincode) {
           throw new Error('Please fill in all address fields.');
         }
@@ -79,13 +79,12 @@ export const Checkout = () => {
         finalAddress = {
           name: addressForm.name,
           phone: addressForm.phone,
-          address: addressForm.street, // backend expects `address`
+          address: addressForm.street,
           city: addressForm.city,
           state: addressForm.state,
           pincode: addressForm.pincode
         };
 
-        // If user is logged in, save the new address
         if (token) {
           await userService.addAddress(token, {
             ...addressForm,
@@ -94,7 +93,6 @@ export const Checkout = () => {
         }
       }
 
-      // Prepare items for backend
       const items = cart.map(item => ({
         variant: item.variant.id,
         quantity: item.quantity
@@ -151,7 +149,7 @@ export const Checkout = () => {
           contact: finalAddress.phone
         },
         theme: {
-          color: '#5c1a1b' // dark-maroon
+          color: '#5c1a1b'
         }
       };
 
@@ -212,6 +210,7 @@ export const Checkout = () => {
 
               {(!addresses.length || selectedAddressId === 'new') && (
                 <form className="space-y-4">
+                  {/* Row 1: Full Name & Phone */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-dark-maroon mb-1">Full Name</label>
@@ -222,15 +221,21 @@ export const Checkout = () => {
                       <input required type="text" value={addressForm.phone} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
                     </div>
                   </div>
+
+                  {/* Row 2: Street Address */}
                   <div>
                     <label className="block text-sm text-dark-maroon mb-1">Street Address</label>
                     <input required type="text" value={addressForm.street} onChange={e => setAddressForm({...addressForm, street: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm text-dark-maroon mb-1">City</label>
-                      <input required type="text" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
-                    </div>
+
+                  {/* Row 3: City */}
+                  <div>
+                    <label className="block text-sm text-dark-maroon mb-1">City</label>
+                    <input required type="text" value={addressForm.city} onChange={e => setAddressForm({...addressForm, city: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
+                  </div>
+
+                  {/* Row 4: State & PIN Code */}
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm text-dark-maroon mb-1">State</label>
                       <input required type="text" value={addressForm.state} onChange={e => setAddressForm({...addressForm, state: e.target.value})} className="w-full px-3 py-2 border rounded-lg" />
