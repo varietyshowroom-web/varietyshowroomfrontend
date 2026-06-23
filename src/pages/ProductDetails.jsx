@@ -635,6 +635,17 @@ export const ProductDetails = () => {
     return { ...baseVariant, image: variantImage };
   };
 
+  // const handleAddToCart = () => {
+  //   if (product.has_sizes && !selectedSize) return;
+  //   addToCart(product, getVariantToAdd(), quantity);
+  // };
+
+  // const handleBuyNow = () => {
+  //   if (product.has_sizes && !selectedSize) return;
+  //   addToCart(product, getVariantToAdd(), quantity);
+  //   // Directly routing to checkout as requested
+  //   navigate('/checkout');
+  // };
   const handleAddToCart = () => {
     if (product.has_sizes && !selectedSize) return;
     addToCart(product, getVariantToAdd(), quantity);
@@ -642,9 +653,16 @@ export const ProductDetails = () => {
 
   const handleBuyNow = () => {
     if (product.has_sizes && !selectedSize) return;
-    addToCart(product, getVariantToAdd(), quantity);
-    // Directly routing to checkout as requested
-    navigate('/checkout');
+    
+    // Create a standalone item object for just this product
+    const buyNowItem = {
+      product: product,
+      variant: getVariantToAdd(),
+      quantity: quantity
+    };
+    
+    // Navigate straight to checkout and pass the item as local router state
+    navigate('/checkout', { state: { buyNowItem } });
   };
 
   // Helper flags for size selection state
