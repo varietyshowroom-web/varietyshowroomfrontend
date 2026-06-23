@@ -592,7 +592,7 @@ export const Checkout = () => {
                 onClick={handleCheckout} 
                 disabled={loading}
               >
-                {loading ? 'Processing...' : 'Pay Now'}
+                {loading ? 'Processing...' : 'Buy Now'}
               </Button>
             </div>
           </div>
