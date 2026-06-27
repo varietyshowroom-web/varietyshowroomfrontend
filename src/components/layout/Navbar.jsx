@@ -356,7 +356,8 @@ export const Navbar = () => {
       rel="noopener noreferrer"
       className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
     >
-      <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
+      {/* FIXED: Removed text-[#25D366] and added fill-current */}
+      <FaWhatsapp className="w-4 h-4 fill-current transition-colors duration-300" />
       <span>
         WhatsApp:{" "}
         <strong className="underline tracking-wide">
