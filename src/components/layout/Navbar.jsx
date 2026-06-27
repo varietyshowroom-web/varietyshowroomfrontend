@@ -289,10 +289,9 @@
 //     </header>
 //   );
 // };
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaWhatsapp } from "react-icons/fa";
-import { useEffect } from 'react';
 import { productService } from '../../services/productService';
 import {
   ShoppingBag,
@@ -302,7 +301,6 @@ import {
   User,
   ChevronDown,
 } from 'lucide-react';
-// Imported a MessageSquare or Phone icon from lucide if you want, but using custom SVG for official WhatsApp branding
 import { useStore } from '../../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -342,31 +340,30 @@ export const Navbar = () => {
   ];
 
   return (
-    // Change ONLY this line in your <header> tag:
-<header className="fixed top-0 w-full z-50 bg-white shadow-md">
+    <header className="fixed top-0 w-full z-50 bg-white shadow-md">
       
-  {/* Top Announcement Banner */}
-  <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
-    <div className="container mx-auto flex justify-center items-center">
-      <a
-        href="https://wa.me/917013280379"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
-      >
-        <FaWhatsapp className="w-4 h-4 text-[#25D366] flex-shrink-0 transition-transform duration-200 hover:scale-110" />
-        <span>
-          WhatsApp:{" "}
-          <strong className="underline tracking-wide">
-            +91 7013280379
-          </strong>
-        </span>
-      </a>
-    </div>
-  </div>
+      {/* Top Announcement Banner */}
+      <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
+        <div className="container mx-auto flex justify-center items-center">
+          <a
+            href="https://wa.me/917013280379"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
+          >
+            <FaWhatsapp className="w-4 h-4 text-[#25D366] flex-shrink-0 transition-transform duration-200 hover:scale-110" />
+            <span>
+              WhatsApp:{" "}
+              <strong className="underline tracking-wide">
+                +91 7013280379
+              </strong>
+            </span>
+          </a>
+        </div>
+      </div>
 
-  {/* Main Navbar Row */}
-  <div className="container mx-auto px-4 md:px-6 py-4">
+      {/* Main Navbar Row */}
+      <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Mobile Menu Button */}
           <button
@@ -598,7 +595,7 @@ export const Navbar = () => {
             </motion.div>
           </>
         )}
-              </AnimatePresence>
+      </AnimatePresence>
     </header>
   );
 };
