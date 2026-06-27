@@ -346,25 +346,29 @@ export const Navbar = () => {
       
       {/* Top Announcement Banner */}
       <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
-        <div className="container mx-auto flex justify-center items-center">
-          <a 
-            href="https://wa.me/917013280379" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
-          >
-            {/* Minimalist WhatsApp SVG Icon */}
-            <svg 
-              className="w-4 h-4 fill-current text-emerald-400" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.59-4.846c1.66.986 3.296 1.503 5.353 1.504 5.514 0 10.001-4.486 10.004-9.997.001-2.67-1.03-5.18-2.903-7.051C17.171 1.737 14.673.705 12.01.705c-5.523 0-10.01 4.487-10.014 9.999-.001 2.13.561 4.209 1.63 6.095L2.61 21.35l4.037-1.059z" />
-            </svg>
-            <span>WhatsApp: <strong className="underline tracking-wide">+91 7013280379</strong></span>
-          </a>
-        </div>
-      </div>
-
+  <div className="container mx-auto flex justify-center items-center">
+    <a 
+      href="https://wa.me/917013280379" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
+    >
+      {/* Official Bright Green & White WhatsApp Icon */}
+      <svg 
+        className="w-4 h-4 flex-shrink-0" 
+        viewBox="0 0 24 24" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="12" cy="12" r="12" fill="#25D366"/>
+        <path 
+          d="M16.75 15.36c-.26-.13-1.54-.76-1.78-.85-.24-.09-.41-.13-.58.13-.17.26-.67.85-.82 1.02-.15.17-.3.19-.56.06A7.09 7.09 0 0 1 10.1 13.9a7.81 7.81 0 0 1-1.32-1.64c-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.06-.13-.58-1.39-.79-1.92-.21-.52-.43-.45-.59-.45-.15 0-.32-.02-.5-.02a.95.95 0 0 0-.68.32 2.89 2.89 0 0 0-.9 2.15c0 1.27.92 2.5 1.05 2.67.13.17 1.8 2.75 4.37 3.86a14.56 14.56 0 0 0 1.46.52c.61.19 1.17.17 1.61.1.49-.07 1.54-.63 1.75-1.23.22-.6.22-1.11.15-1.23-.06-.11-.23-.19-.49-.32zM12.03 18.9h-.01c-1.21 0-2.4-.33-3.45-.94l-.25-.15-2.57.67.69-2.5-.16-.26a6.85 6.85 0 0 1-1.05-3.6 6.9 6.9 0 0 1 6.9-6.9 6.9 0 0 1 4.88 2.02 6.84 6.84 0 0 1 2.02 4.89 6.9 6.9 0 0 1-6.9 6.87z" 
+          fill="#FFF"
+        />
+      </svg>
+      <span>WhatsApp: <strong className="underline tracking-wide">+91 7013280379</strong></span>
+    </a>
+  </div>
+</div>
       {/* Main Navbar Row */}
       <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
