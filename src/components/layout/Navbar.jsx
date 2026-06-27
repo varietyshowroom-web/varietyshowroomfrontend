@@ -351,20 +351,21 @@ export const Navbar = () => {
 <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
   <div className="container mx-auto flex justify-center items-center">
     <a
-      href="https://wa.me/917013280379"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
-    >
-      {/* FIXED: Removed text-[#25D366] and added fill-current */}
-      <FaWhatsapp className="w-4 h-4 fill-current transition-colors duration-300" />
-      <span>
-        WhatsApp:{" "}
-        <strong className="underline tracking-wide">
-          +91 7013280379
-        </strong>
-      </span>
-    </a>
+  href="https://wa.me/917013280379"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
+>
+  {/* Option A: Keep the icon green, but add a transition effect */}
+  <FaWhatsapp className="w-4 h-4 text-[#25D366] flex-shrink-0 transition-transform duration-200 hover:scale-115" />
+  
+  <span>
+    WhatsApp:{" "}
+    <strong className="underline tracking-wide">
+      +91 7013280379
+    </strong>
+  </span>
+</a>
   </div>
 </div>
       {/* Main Navbar Row */}
