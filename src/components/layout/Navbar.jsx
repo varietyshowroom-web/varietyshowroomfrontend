@@ -341,7 +341,8 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-md">
+    // Change ONLY this line in your <header> tag:
+<header className="sticky top-0 w-full z-50 bg-white shadow-md">
       
       {/* Top Announcement Banner */}
       <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
