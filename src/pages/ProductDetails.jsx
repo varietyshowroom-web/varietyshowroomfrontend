@@ -309,7 +309,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ShoppingBag, ChevronRight, Share2, ImageIcon } from 'lucide-react';
+import { Heart, ShoppingBag, ChevronRight, ImageIcon } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useStore } from '../store/useStore';
 import { Button } from '../components/ui/Button';
@@ -328,30 +328,51 @@ export const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      setLoading(true);
-      const data = await productService.getProductById(id);
-      setProduct(data);
-      if (data && data.available_colors?.length > 0) {
-        const firstColor = data.available_colors[0];
-        setSelectedColor(firstColor);
+      try {
+        setLoading(true);
+        const data = await productService.getProductById(id);
+        setProduct(data);
         
-        const imgIndex = data.images?.findIndex(img => img.color === firstColor.id);
-        if(imgIndex >= 0) setActiveImage(imgIndex);
-        else setActiveImage(0);
+        if (data) {
+          // 1. Setup colors
+          if (data.available_colors && data.available_colors.length > 0) {
+            const firstColor = data.available_colors[0];
+            setSelectedColor(firstColor);
 
-        // Auto-select size if only ONE variant exists for this color
-        const colorVariants = data.variants?.filter(v => v.color?.id === firstColor.id) || [];
-        if (data.has_sizes && colorVariants.length === 1) {
-          setSelectedSize(colorVariants[0].size);
-        } else {
-          setSelectedSize(null);
+            // Find an image matching this first color ID
+            // Handles both backend structures: img.color being an object { id } or a direct primitive ID
+            const imgIndex = data.images?.findIndex(img => {
+              const imgColorId = img.color?.id !== undefined ? img.color.id : img.color;
+              return Number(imgColorId) === Number(firstColor.id);
+            });
+
+            if (imgIndex >= 0) setActiveImage(imgIndex);
+            else setActiveImage(0);
+
+            // Auto-select size if only ONE variant exists for this color
+            const colorVariants = data.variants?.filter(v => {
+              const variantColorId = v.color?.id !== undefined ? v.color.id : v.color;
+              return Number(variantColorId) === Number(firstColor.id);
+            }) || [];
+            
+            if (data.has_sizes && colorVariants.length === 1) {
+              setSelectedSize(colorVariants[0].size);
+            } else {
+              setSelectedSize(null);
+            }
+          } else {
+            // No color variations, default to index 0
+            setActiveImage(0);
+            if (data.has_sizes && data.variants?.length === 1) {
+              setSelectedSize(data.variants[0].size);
+            }
+          }
         }
-      } else if (data && data.has_sizes) {
-        if (data.variants?.length === 1) {
-          setSelectedSize(data.variants[0].size);
-        }
+      } catch (err) {
+        console.error("Error fetching product layout details:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchProduct();
   }, [id]);
@@ -359,48 +380,62 @@ export const ProductDetails = () => {
   if (loading) return <div className="min-h-screen pt-32 pb-24 flex justify-center"><div className="animate-pulse w-10 h-10 border-4 border-maroon-light rounded-full border-t-transparent animate-spin"></div></div>;
   if (!product) return <div className="min-h-screen pt-32 text-center"><h1 className="text-2xl font-serif">Product Not Found</h1></div>;
 
-  const isWishlisted = wishlist.some(item => item.id === product.id);
-
-  const availableVariants = product.variants.filter(v => v.color?.id === selectedColor?.id);
-  const selectedVariant = availableVariants.find(v => v.size === selectedSize);
-
-  // const colorImages = product.images?.filter(img => img.color === selectedColor?.id) || [];
-  // const displayImages = colorImages.length > 0 ? colorImages : (product.images || []);
-
-  // // Extraction tool that returns string URL or null instead of placeholder strings
-  // const getProductImageSrc = (imgObj) => {
-  //   if (!imgObj) return null;
-  //   return typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || null);
-  // };
-  const colorImages = product?.images?.filter(img => img.color === selectedColor?.id) || [];
-  // FALLBACK: If no color matches, use product.images. If that doesn't exist, try product.image or an array containing it
-  const displayImages = colorImages.length > 0 
-    ? colorImages 
-    : (product?.images?.length > 0 
-        ? product.images 
-        : (product?.image ? [product.image] : []));
-
-  // Ultra-flexible extractor that searches for any common image property names
+  // Extraction tool to cleanly find image links out of strings or objects
   const getProductImageSrc = (imgObj) => {
     if (!imgObj) return null;
     if (typeof imgObj === 'string') return imgObj;
-    
-    // Checks standard API naming conventions
     return imgObj.image || imgObj.url || imgObj.imageUrl || imgObj.src || null;
   };
+
+  // Safe checks for variants matching the color selection structure
+  const availableVariants = product.variants?.filter(v => {
+    const variantColorId = v.color?.id !== undefined ? v.color.id : v.color;
+    return Number(variantColorId) === Number(selectedColor?.id);
+  }) || [];
+  
+  const selectedVariant = availableVariants.find(v => v.size === selectedSize);
+
+  // Filter image pool dynamically by color matching
+  const colorImages = product.images?.filter(img => {
+    const imgColorId = img.color?.id !== undefined ? img.color.id : img.color;
+    return Number(imgColorId) === Number(selectedColor?.id);
+  }) || [];
+
+  // Robust Fallback Chain: Color Filtered -> Complete Array -> Primary Base Field URL
+  const displayImages = colorImages.length > 0 
+    ? colorImages 
+    : (product.images && product.images.length > 0 
+        ? product.images 
+        : (product.image ? [product.image] : []));
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     
-    // Recalculate specific index targets safely
-    const filteredImages = product.images?.filter(img => img.color === color.id) || [];
-    if (filteredImages.length > 0) {
-      setActiveImage(0);
+    // Find index inside the global array to see if we can highlight it
+    const imgIndex = product.images?.findIndex(img => {
+      const imgColorId = img.color?.id !== undefined ? img.color.id : img.color;
+      return Number(imgColorId) === Number(color.id);
+    });
+
+    if (imgIndex >= 0) {
+      // Find where this image stands in relation to the new dynamic displayImages array
+      const localIndex = product.images.filter(img => {
+        const imgColorId = img.color?.id !== undefined ? img.color.id : img.color;
+        return Number(imgColorId) === Number(color.id);
+      }).findIndex(img => {
+        const imgColorId = img.color?.id !== undefined ? img.color.id : img.color;
+        return Number(imgColorId) === Number(color.id);
+      });
+      setActiveImage(localIndex >= 0 ? localIndex : 0);
     } else {
       setActiveImage(0);
     }
 
-    const variantsForColor = product.variants.filter(v => v.color?.id === color.id);
+    const variantsForColor = product.variants?.filter(v => {
+      const variantColorId = v.color?.id !== undefined ? v.color.id : v.color;
+      return Number(variantColorId) === Number(color.id);
+    }) || [];
+
     if (product.has_sizes && variantsForColor.length === 1) {
       setSelectedSize(variantsForColor[0].size);
     } else {
@@ -410,7 +445,7 @@ export const ProductDetails = () => {
 
   const getVariantToAdd = () => {
     const variantImage = displayImages.length > 0 ? getProductImageSrc(displayImages[0]) : null;
-    const baseVariant = selectedVariant || product.variants[0] || { id: 'default', color: selectedColor, size: selectedSize };
+    const baseVariant = selectedVariant || product.variants?.[0] || { id: 'default', color: selectedColor, size: selectedSize };
     return { ...baseVariant, image: variantImage };
   };
 
@@ -432,7 +467,10 @@ export const ProductDetails = () => {
   };
 
   const isSizeRequiredButMissing = product.has_sizes && !selectedSize;
-  const currentImageSrc = displayImages.length > 0 ? getProductImageSrc(displayImages[activeImage]) : null;
+  
+  // Safe bounds guard to reset index gracefully if active image out-of-bounds on color switches
+  const visualIndex = activeImage >= displayImages.length ? 0 : activeImage;
+  const currentImageSrc = displayImages.length > 0 ? getProductImageSrc(displayImages[visualIndex]) : null;
 
   return (
     <div className="min-h-screen bg-white-bg pt-24 pb-24">
@@ -455,16 +493,15 @@ export const ProductDetails = () => {
           <div className="flex flex-col md:flex-col-reverse lg:flex-row-reverse xl:flex-row-reverse gap-4">
             <div className="relative flex-grow aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center">
               
-              {/* Native Skeleton Loader / Fallback layout if URL fails or is empty */}
               {!currentImageSrc ? (
-                <div className="absolute inset-0 bg-gray-100 animate-pulse flex flex-col items-center justify-center text-gray-400 gap-2">
-                  <ImageIcon size={40} className="stroke-[1.5]" />
-                  <span className="text-xs font-medium">Loading image...</span>
+                <div className="absolute inset-0 bg-gray-50 flex flex-col items-center justify-center text-gray-400 gap-2">
+                  <ImageIcon size={40} className="stroke-[1.5] animate-pulse" />
+                  <span className="text-xs font-medium">No image template found</span>
                 </div>
               ) : (
                 <AnimatePresence mode="wait">
                   <motion.img 
-                    key={activeImage + (selectedColor?.id || '')}
+                    key={visualIndex + (selectedColor?.id || 'default')}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -481,14 +518,14 @@ export const ProductDetails = () => {
                   {displayImages.map((_, idx) => (
                     <div 
                       key={idx} 
-                      className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${visualIndex === idx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`}
                     />
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Thumbnails list */}
+            {/* Thumbnails */}
             {displayImages.length > 1 && (
               <div className="flex md:flex-row lg:flex-col xl:flex-col gap-4 overflow-x-auto md:overflow-x-auto lg:overflow-x-visible lg:w-24 flex-shrink-0 pb-2 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {displayImages.map((img, idx) => {
@@ -497,7 +534,7 @@ export const ProductDetails = () => {
                     <button 
                       key={idx}
                       onClick={() => setActiveImage(idx)}
-                      className={`relative aspect-[3/4] w-16 md:w-20 lg:w-full rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 bg-gray-50 ${activeImage === idx ? 'border-maroon-light scale-95' : 'border-transparent hover:border-cream-beige'}`}
+                      className={`relative aspect-[3/4] w-16 md:w-20 lg:w-full rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 bg-gray-50 ${visualIndex === idx ? 'border-maroon-light scale-95' : 'border-transparent hover:border-cream-beige'}`}
                     >
                       {thumbSrc ? (
                         <img src={thumbSrc} alt="" className="w-full h-full object-cover" />
