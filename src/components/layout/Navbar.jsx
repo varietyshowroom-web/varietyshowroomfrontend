@@ -48,39 +48,23 @@ export const Navbar = () => {
     <header className="fixed top-0 w-full z-50 bg-white shadow-md">
       {/* Top Announcement Banner */}
       <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
-        <div className="container mx-auto flex justify-center items-center">
-          <a
-            href="https://wa.me/917013280379"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
-          >
-            <svg 
-              className="w-4 h-4 flex-shrink-0 select-none pointer-events-none transition-transform duration-200 hover:scale-110" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                fillRule="evenodd" 
-                clipRule="evenodd" 
-                d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" 
-                fill="#25D366"
-              />
-              <path 
-                fillRule="evenodd" 
-                clipRule="evenodd" 
-                d="M12.0041 4.5C7.86315 4.5 4.5 7.86315 4.5 12.0041C4.49841 13.4357 4.90802 14.8315 5.68112 16.0354L4.56846 19.4447L8.10682 18.3377C9.25597 19.043 10.5982 19.4124 11.9959 19.413C16.1368 19.413 19.5 16.0498 19.5 11.9044C19.5015 9.89735 18.721 8.01258 17.3006 6.59218C15.8802 5.17178 13.9999 4.49896 12.0041 4.5ZM15.5413 13.5152C15.3481 13.4184 14.3989 12.9511 14.2216 12.8866C14.0442 12.8222 13.9153 12.7899 13.7863 12.9834C13.6573 13.1768 13.2865 13.6282 13.1737 13.7571C13.0608 13.8861 12.948 13.9022 12.7545 13.8055C12.5611 13.7088 11.9378 13.5042 11.199 12.8398C10.6238 12.3263 10.2351 11.6917 10.1222 11.4983C10.0094 11.3048 10.1101 11.1998 10.2071 11.1032C10.2941 11.0163 10.4008 10.8776 10.4975 10.7648C10.5942 10.652 10.6264 10.5714 10.6909 10.4424C10.7554 10.3134 10.7231 10.2005 10.6748 10.1038C10.6264 10.0071 10.2394 9.0559 10.0782 8.66898C9.921 8.29215 9.76186 8.3421 9.64336 8.3421H9.45005C9.25656 8.3421 8.95026 8.41461 8.69232 8.69232C8.43438 8.97003 7.70891 9.64714 7.70891 11.0336C7.70891 12.42 8.7183 13.7581 8.8579 13.9442C8.9975 14.1303 10.817 16.9944 13.6166 18.1009C14.2821 18.364 14.8016 18.5369 15.206 18.6659C15.8744 18.8787 16.4815 18.849 16.9622 18.7771C17.4984 18.697 18.6133 18.1009 18.8447 17.456C19.076 16.8111 19.076 16.263 19.0063 16.1501C18.9366 16.0373 18.7346 15.912 18.5413 15.8152L15.5413 13.5152Z" 
-                fill="white"
-              />
-            </svg>
-            <span>
-              WhatsApp: <strong className="underline tracking-wide">+91 7013280379</strong>
-            </span>
-          </a>
-        </div>
-      </div>
-
+  <div className="container mx-auto flex justify-center items-center">
+    <a
+      href="https://wa.me/917013280379"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
+    >
+      <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
+      <span>
+        WhatsApp:{" "}
+        <strong className="underline tracking-wide">
+          +91 7013280379
+        </strong>
+      </span>
+    </a>
+  </div>
+</div>
       {/* Main Navbar Row */}
       <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
