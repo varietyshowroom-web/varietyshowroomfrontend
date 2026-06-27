@@ -453,7 +453,7 @@ export const Navbar = () => {
                 </form>
               ) : null}
 
-              {/* Toggle Search Icon (Visible on desktop when closed, always visible as toggle on mobile) */}
+              {/* Toggle Search Icon */}
               <button 
                 onClick={() => setIsSearchOpen(!isSearchOpen)} 
                 className={`${isSearchOpen ? 'md:hidden' : 'block'} text-dark-maroon hover:text-maroon-light transition-all duration-300`}
@@ -484,7 +484,7 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Search Dropdown Row (Appears right underneath the header row) */}
+        {/* Mobile Search Dropdown Row */}
         <AnimatePresence>
           {isSearchOpen && (
             <motion.div
