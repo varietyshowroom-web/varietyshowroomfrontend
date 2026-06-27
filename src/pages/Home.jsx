@@ -332,31 +332,31 @@ export const Home = () => {
       </section>
 
       {/* ================= DESKTOP HERO ================= */}
-      <section className="hidden md:block w-full relative">
-        <div className="relative w-full block">
-          {/* Full Banner */}
-          <img
-            src={hero}
-            alt="Variety Showroom"
-            className="w-full h-auto block"
-          />
+      <section className="hidden md:block w-full relative pt-24">
+  <div className="relative w-full block">
+    {/* Full Banner */}
+    <img
+      src={hero}
+      alt="Variety Showroom"
+      className="w-full h-auto block"
+    />
 
-          {/* Overlay Buttons */}
-          <div className="absolute bottom-[10%] left-[34%] -translate-x-1/2 flex gap-4 z-10">
-            <Link to="/shop">
-              <button className="btn-primary whitespace-nowrap">
-                Shop Now
-              </button>
-            </Link>
+    {/* Overlay Buttons */}
+    <div className="absolute bottom-[10%] left-[34%] -translate-x-1/2 flex gap-4 z-10 mt-1">
+      <Link to="/shop">
+        <button className="btn-primary whitespace-nowrap">
+          Shop Now
+        </button>
+      </Link>
 
-            <Link to="/category/women">
-              <button className="btn-secondary whitespace-nowrap">
-                Explore Collection
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Link to="/category/women">
+        <button className="btn-secondary whitespace-nowrap">
+          Explore Collection
+        </button>
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* ================= TRENDING CATEGORIES ================= */}
       {/* CHANGED: Adjusted from py-24 to pt-10 pb-20 to pull header up close to the hero banner */}
