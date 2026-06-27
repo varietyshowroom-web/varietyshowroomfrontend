@@ -364,13 +364,29 @@ export const ProductDetails = () => {
   const availableVariants = product.variants.filter(v => v.color?.id === selectedColor?.id);
   const selectedVariant = availableVariants.find(v => v.size === selectedSize);
 
-  const colorImages = product.images?.filter(img => img.color === selectedColor?.id) || [];
-  const displayImages = colorImages.length > 0 ? colorImages : (product.images || []);
+  // const colorImages = product.images?.filter(img => img.color === selectedColor?.id) || [];
+  // const displayImages = colorImages.length > 0 ? colorImages : (product.images || []);
 
-  // Extraction tool that returns string URL or null instead of placeholder strings
+  // // Extraction tool that returns string URL or null instead of placeholder strings
+  // const getProductImageSrc = (imgObj) => {
+  //   if (!imgObj) return null;
+  //   return typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || null);
+  // };
+  const colorImages = product?.images?.filter(img => img.color === selectedColor?.id) || [];
+  // FALLBACK: If no color matches, use product.images. If that doesn't exist, try product.image or an array containing it
+  const displayImages = colorImages.length > 0 
+    ? colorImages 
+    : (product?.images?.length > 0 
+        ? product.images 
+        : (product?.image ? [product.image] : []));
+
+  // Ultra-flexible extractor that searches for any common image property names
   const getProductImageSrc = (imgObj) => {
     if (!imgObj) return null;
-    return typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || null);
+    if (typeof imgObj === 'string') return imgObj;
+    
+    // Checks standard API naming conventions
+    return imgObj.image || imgObj.url || imgObj.imageUrl || imgObj.src || null;
   };
 
   const handleColorSelect = (color) => {
