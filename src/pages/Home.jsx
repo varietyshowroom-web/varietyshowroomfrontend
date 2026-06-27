@@ -306,30 +306,30 @@ export const Home = () => {
   return (
     <div className="min-h-screen bg-white-bg">
       {/* ================= MOBILE HERO ================= */}
-      <section className="w-full md:hidden relative mt-[68px]">
-        <div>
-          <div className="relative w-full block">
-            {/* Full Banner */}
-            <Link to="/shop" className="w-full block">
-              <img
-                src={banner}
-                alt="Variety Showroom"
-                className="w-full h-auto block shadow-xl"
-              />
-            </Link>
+      <section className="w-full md:hidden relative mt-[104px] bg-dark-maroon">
+  <div className="bg-white"> {/* Keeps the rest of the page layout standard */}
+    <div className="relative w-full block">
+      {/* Full Banner */}
+      <Link to="/shop" className="w-full block">
+        <img
+          src={banner}
+          alt="Variety Showroom"
+          className="w-full h-auto block shadow-xl"
+        />
+      </Link>
 
-            {/* Overlay Button */}
-            <Link 
-              to="/shop" 
-              className="absolute bottom-[6%] left-[30%] -translate-x-1/2 z-10"
-            >
-              <button className="px-4 py-1.5 text-[11px] bg-dark-maroon text-white rounded-md font-semibold shadow-md hover:bg-opacity-90 transition-all whitespace-nowrap">
-                Shop Now
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Overlay Button */}
+      <Link 
+        to="/shop" 
+        className="absolute bottom-[6%] left-[30%] -translate-x-1/2 z-10"
+      >
+        <button className="px-4 py-1.5 text-[11px] bg-dark-maroon text-white rounded-md font-semibold shadow-md hover:bg-opacity-90 transition-all whitespace-nowrap">
+          Shop Now
+        </button>
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* ================= DESKTOP HERO ================= */}
       <section className="hidden md:block w-full relative pt-24">
