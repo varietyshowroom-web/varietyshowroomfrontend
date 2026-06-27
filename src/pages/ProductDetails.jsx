@@ -309,7 +309,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ShoppingBag, ChevronRight, Share2 } from 'lucide-react';
+import { Heart, ShoppingBag, ChevronRight, Share2, ImageIcon } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useStore } from '../store/useStore';
 import { Button } from '../components/ui/Button';
@@ -347,7 +347,6 @@ export const ProductDetails = () => {
           setSelectedSize(null);
         }
       } else if (data && data.has_sizes) {
-        // Handle products without color variations but have sizes
         if (data.variants?.length === 1) {
           setSelectedSize(data.variants[0].size);
         }
@@ -368,26 +367,23 @@ export const ProductDetails = () => {
   const colorImages = product.images?.filter(img => img.color === selectedColor?.id) || [];
   const displayImages = colorImages.length > 0 ? colorImages : (product.images || []);
 
-  // Safe helper to extract image string safely whether it's an object property or a plain string
+  // Extraction tool that returns string URL or null instead of placeholder strings
   const getProductImageSrc = (imgObj) => {
-    if (!imgObj) return 'https://via.placeholder.com/600x800';
-    return typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || 'https://via.placeholder.com/600x800');
+    if (!imgObj) return null;
+    return typeof imgObj === 'string' ? imgObj : (imgObj.image || imgObj.url || null);
   };
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
     
-    // Find index of first image matching this specific color sequence
-    const imgIndex = product.images?.findIndex(img => img.color === color.id);
-    if (imgIndex >= 0) {
-      // Find where this image stands inside the filtered displayImages array
-      const filteredIndex = colorImages.findIndex(img => img.color === color.id);
-      setActiveImage(filteredIndex >= 0 ? filteredIndex : 0);
+    // Recalculate specific index targets safely
+    const filteredImages = product.images?.filter(img => img.color === color.id) || [];
+    if (filteredImages.length > 0) {
+      setActiveImage(0);
     } else {
       setActiveImage(0);
     }
 
-    // Auto-select size if only ONE variant exists for this newly selected color
     const variantsForColor = product.variants.filter(v => v.color?.id === color.id);
     if (product.has_sizes && variantsForColor.length === 1) {
       setSelectedSize(variantsForColor[0].size);
@@ -420,6 +416,7 @@ export const ProductDetails = () => {
   };
 
   const isSizeRequiredButMissing = product.has_sizes && !selectedSize;
+  const currentImageSrc = displayImages.length > 0 ? getProductImageSrc(displayImages[activeImage]) : null;
 
   return (
     <div className="min-h-screen bg-white-bg pt-24 pb-24">
@@ -440,41 +437,64 @@ export const ProductDetails = () => {
           
           {/* Image Gallery */}
           <div className="flex flex-col md:flex-col-reverse lg:flex-row-reverse xl:flex-row-reverse gap-4">
-            <div className="relative flex-grow aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.img 
-                  key={activeImage}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  src={getProductImageSrc(displayImages[activeImage])} 
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </AnimatePresence>
-
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/15 backdrop-blur-sm md:hidden z-10">
-                {displayImages.map((_, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`}
+            <div className="relative flex-grow aspect-[3/4] bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center">
+              
+              {/* Native Skeleton Loader / Fallback layout if URL fails or is empty */}
+              {!currentImageSrc ? (
+                <div className="absolute inset-0 bg-gray-100 animate-pulse flex flex-col items-center justify-center text-gray-400 gap-2">
+                  <ImageIcon size={40} className="stroke-[1.5]" />
+                  <span className="text-xs font-medium">Loading image...</span>
+                </div>
+              ) : (
+                <AnimatePresence mode="wait">
+                  <motion.img 
+                    key={activeImage + (selectedColor?.id || '')}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    src={currentImageSrc} 
+                    alt={product.name}
+                    className="w-full h-full object-cover"
                   />
-                ))}
-              </div>
+                </AnimatePresence>
+              )}
+
+              {displayImages.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/15 backdrop-blur-sm md:hidden z-10">
+                  {displayImages.map((_, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === idx ? 'w-3.5 bg-white' : 'w-1.5 bg-white/50'}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="flex md:flex-row lg:flex-col xl:flex-col gap-4 overflow-x-auto md:overflow-x-auto lg:overflow-x-visible lg:w-24 flex-shrink-0 pb-2 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {displayImages.map((img, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setActiveImage(idx)}
-                  className={`relative aspect-[3/4] w-16 md:w-20 lg:w-full rounded-lg overflow-hidden border-2 transition-colors flex-shrink-0 ${activeImage === idx ? 'border-maroon-light' : 'border-transparent hover:border-cream-beige'}`}
-                >
-                  <img src={getProductImageSrc(img)} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
+            {/* Thumbnails list */}
+            {displayImages.length > 1 && (
+              <div className="flex md:flex-row lg:flex-col xl:flex-col gap-4 overflow-x-auto md:overflow-x-auto lg:overflow-x-visible lg:w-24 flex-shrink-0 pb-2 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {displayImages.map((img, idx) => {
+                  const thumbSrc = getProductImageSrc(img);
+                  return (
+                    <button 
+                      key={idx}
+                      onClick={() => setActiveImage(idx)}
+                      className={`relative aspect-[3/4] w-16 md:w-20 lg:w-full rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 bg-gray-50 ${activeImage === idx ? 'border-maroon-light scale-95' : 'border-transparent hover:border-cream-beige'}`}
+                    >
+                      {thumbSrc ? (
+                        <img src={thumbSrc} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                          <ImageIcon size={16} />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Product Details Section */}
