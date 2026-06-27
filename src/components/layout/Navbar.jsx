@@ -416,7 +416,7 @@ export const Navbar = () => {
                     {categories.map((category) => (
                       <Link
                         key={category.id || category.name}
-                        to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}
                         className="block px-5 py-4 text-dark-maroon hover:bg-light-beige hover:text-maroon-light transition-all duration-200 border-b border-border-beige last:border-none"
                       >
                         {category.name}
@@ -434,7 +434,6 @@ export const Navbar = () => {
             {/* Desktop-only Search Form Inline / Mobile Search Toggle Button */}
             <div className="relative flex items-center">
               {isSearchOpen ? (
-                // Desktop Search Layout (remains inline)
                 <form 
                   onSubmit={handleSearch} 
                   className="hidden md:flex absolute right-0 items-center bg-white border border-maroon-light rounded-full px-3 py-1 shadow-sm w-64"
@@ -516,7 +515,6 @@ export const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -525,7 +523,6 @@ export const Navbar = () => {
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
             />
 
-            {/* Sidebar */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
@@ -533,12 +530,10 @@ export const Navbar = () => {
               transition={{ duration: 0.3 }}
               className="fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white z-50 p-6 shadow-2xl flex flex-col"
             >
-              {/* Header */}
               <div className="flex justify-between items-center mb-10">
                 <h2 className="text-2xl font-bold text-dark-maroon">
                   Menu
                 </h2>
-
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-dark-maroon"
@@ -547,7 +542,6 @@ export const Navbar = () => {
                 </button>
               </div>
 
-              {/* Links */}
               <nav className="flex flex-col space-y-5">
                 {navLinks.map((link) => (
                   <Link
@@ -560,12 +554,10 @@ export const Navbar = () => {
                   </Link>
                 ))}
 
-                {/* Categories */}
                 <div>
                   <h3 className="text-lg font-semibold text-maroon-light mb-3">
                     Categories
                   </h3>
-
                   <div className="flex flex-col space-y-3 pl-2">
                     {categories.map((category) => (
                       <Link
@@ -581,7 +573,6 @@ export const Navbar = () => {
                 </div>
               </nav>
 
-              {/* Bottom Links */}
               <div className="mt-auto flex flex-col space-y-4 pt-8 border-t border-border-beige">
                 <Link
                   to="/profile"
