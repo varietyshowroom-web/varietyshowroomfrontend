@@ -345,31 +345,28 @@ export const Navbar = () => {
     // Change ONLY this line in your <header> tag:
 <header className="fixed top-0 w-full z-50 bg-white shadow-md">
       
-      {/* Top Announcement Banner */}
-      
-
-<div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
-  <div className="container mx-auto flex justify-center items-center">
-    <a
-  href="https://wa.me/917013280379"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
->
-  {/* Option A: Keep the icon green, but add a transition effect */}
-  <FaWhatsapp className="w-4 h-4 text-[#25D366] flex-shrink-0 transition-transform duration-200 hover:scale-115" />
-  
-  <span>
-    WhatsApp:{" "}
-    <strong className="underline tracking-wide">
-      +91 7013280379
-    </strong>
-  </span>
-</a>
+  {/* Top Announcement Banner */}
+  <div className="bg-dark-maroon text-white text-xs sm:text-sm py-2 px-4 transition-all duration-300">
+    <div className="container mx-auto flex justify-center items-center">
+      <a
+        href="https://wa.me/917013280379"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 hover:text-light-beige opacity-95 hover:opacity-100 transition-all font-medium"
+      >
+        <FaWhatsapp className="w-4 h-4 text-[#25D366] flex-shrink-0 transition-transform duration-200 hover:scale-110" />
+        <span>
+          WhatsApp:{" "}
+          <strong className="underline tracking-wide">
+            +91 7013280379
+          </strong>
+        </span>
+      </a>
+    </div>
   </div>
-</div>
-      {/* Main Navbar Row */}
-      <div className="container mx-auto px-4 md:px-6 py-4">
+
+  {/* Main Navbar Row */}
+  <div className="container mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Mobile Menu Button */}
           <button
