@@ -88,7 +88,7 @@ export const ProductCard = ({ product }) => {
       </Link>
 
       {/* Product Info */}
-      <div className="flex flex-col flex-grow">
+      {/* <div className="flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-1">
           <Link to={`/category/${product.category_name}`} className="text-xs text-muted-maroon uppercase tracking-wider hover:text-maroon-light">
             {product.category_name}
@@ -102,7 +102,25 @@ export const ProductCard = ({ product }) => {
           {product.original_price > product.price && (
             <span className="text-sm text-muted-maroon line-through">₹{product.original_price}</span>
           )}
-        </div>
+        </div> */}
+      <div className="flex flex-col flex-grow">
+  <div className="flex justify-between items-start mb-1">
+    <Link to={`/category/${product.category_name}`} className="text-xs text-muted-maroon uppercase tracking-wider hover:text-maroon-light">
+      {product.category_name}
+    </Link>
+  </div>
+  <Link to={`/product/${product.id}`} className="text-lg font-serif font-medium text-dark-maroon leading-tight mb-2 hover:text-maroon-light transition-colors line-clamp-1">
+    {product.name}
+  </Link>
+  <div className="mt-auto flex items-center gap-2">
+    <span className="text-lg font-bold text-dark-maroon">₹{product.price}</span>
+    
+    {/* FIX: Force Number parsing to guarantee accurate mathematical evaluation */}
+    {product.original_price && Number(product.original_price) > Number(product.price) && (
+      <span className="text-sm text-muted-maroon line-through">₹{product.original_price}</span>
+    )}
+  </div>
+</div> {/* Added missing closing tag for clarity */}
         
         {/* Color Dots */}
         {product.available_colors && product.available_colors.length > 0 && (
