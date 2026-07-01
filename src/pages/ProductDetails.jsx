@@ -1333,20 +1333,22 @@ export const ProductDetails = () => {
 
           {/* Product Details Section */}
           <div className="flex flex-col pt-4">
-            <h1 className="text-3xl md:text-4xl font-serif text-dark-maroon mb-2 leading-tight">{product.name}</h1>
-            <p className="text-muted-maroon mb-6 text-sm md:text-base">Product Code: {product.code}</p>
-            
-            <div className="flex items-end gap-4 mb-8 pb-8 border-b border-cream-beige/50">
-              <span className="text-3xl font-bold text-dark-maroon">₹{product.price}</span>
-              {product.original_price > product.price && (
-                <>
-                  <span className="text-xl text-muted-maroon line-through mb-1">₹{product.original_price}</span>
-                  <span className="text-sm font-bold text-maroon-light bg-maroon-light/10 px-2 py-1 rounded mb-1">
-                    {product.discount_percentage}% OFF
-                  </span>
-                </>
-              )}
-            </div>
+  <h1 className="text-3xl md:text-4xl font-serif text-dark-maroon mb-2 leading-tight">{product.name}</h1>
+  <p className="text-muted-maroon mb-6 text-sm md:text-base">Product Code: {product.code}</p>
+  
+  <div className="flex items-end gap-4 mb-8 pb-8 border-b border-cream-beige/50">
+    <span className="text-3xl font-bold text-dark-maroon">₹{product.price}</span>
+    
+    {/* FIX: Force Number conversions to guarantee correct evaluation for all data types */}
+    {product.original_price && Number(product.original_price) > Number(product.price) && (
+      <>
+        <span className="text-xl text-muted-maroon line-through mb-1">₹{product.original_price}</span>
+        <span className="text-sm font-bold text-maroon-light bg-maroon-light/10 px-2 py-1 rounded mb-1">
+          {product.discount_percentage}% OFF
+        </span>
+      </>
+    )}
+  </div>
 
             {/* Colors */}
             {product.available_colors && product.available_colors.length > 0 && (
